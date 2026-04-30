@@ -6,8 +6,6 @@
     <title>Catálogo Premium - Vapes</title>
     <style>
         body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 15px 10px 90px 10px; }
-        
-        /* O espaçamento foi ajustado aqui: gap: 30px (vertical) 12px (horizontal) */
         .catalogo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px 12px; max-width: 600px; margin: 0 auto; }
         
         .card { background-color: #1e1e1e; border: 1px solid #333; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
@@ -28,15 +26,30 @@
         .opcao-sabor:last-child { border-bottom: none; }
         .opcao-sabor input { width: 16px; height: 16px; margin-right: 8px; margin-top: 2px; flex-shrink: 0; accent-color: #4caf50; }
         
+        .textos-sabor { display: flex; flex-direction: column; }
+        .destaque-sabor { color: #4caf50; font-weight: 600; font-size: 0.75rem; }
+        .descricao-sabor { font-size: 0.65rem; color: #888; margin-top: 2px; line-height: 1.1; }
+        
         .btn-flutuante { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: #25D366; color: white; text-align: center; padding: 14px; border-radius: 30px; font-size: 1.05rem; font-weight: bold; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.25); border: none; cursor: pointer; z-index: 100; }
 
-        .modal-fundo { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 200; justify-content: center; align-items: center; }
-        .modal-conteudo { background: #1e1e1e; padding: 25px; border-radius: 12px; width: 90%; max-width: 350px; text-align: center; border: 1px solid #333; }
-        .modal-conteudo h2 { margin-top: 0; color: #fff; font-size: 1.2rem; margin-bottom: 20px;}
-        .btn-pagamento { display: block; width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: none; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+        .modal-fundo { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 200; justify-content: center; align-items: center; }
+        .modal-conteudo { background: #1e1e1e; padding: 25px; border-radius: 12px; width: 90%; max-width: 350px; text-align: center; border: 1px solid #333; display: flex; flex-direction: column; max-height: 90vh;}
+        .modal-conteudo h2 { margin-top: 0; color: #fff; font-size: 1.2rem; margin-bottom: 15px;}
+        
+        .caixa-resumo { background: #141414; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px; margin-bottom: 15px; text-align: left; font-size: 0.85rem; color: #ddd; max-height: 200px; overflow-y: auto; }
+        .caixa-resumo ul { padding-left: 0; margin: 0; }
+        .caixa-resumo li { margin-bottom: 4px; list-style: none; }
+        .caixa-resumo .resumo-titulo { color: #4caf50; font-weight: bold; margin-top: 8px; margin-bottom: 4px; font-size: 0.95rem; }
+        .caixa-resumo .resumo-titulo:first-child { margin-top: 0; }
+        
+        .resumo-totais { border-top: 1px solid #333; margin-top: 10px; padding-top: 10px; font-weight: bold; }
+        .resumo-totais .t-pix { color: #ffffff; display: block; font-size: 1rem; margin-bottom: 3px; }
+        .resumo-totais .t-cartao { color: #ffffff; display: block; font-size: 0.9rem; }
+
+        .btn-pagamento { display: block; width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: none; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
         .btn-pix { background: #32bcad; color: white; } 
         .btn-cartao { background: #444; color: white; border: 1px solid #666; }
-        .btn-fechar-modal { background: none; border: none; color: #888; text-decoration: underline; margin-top: 10px; cursor: pointer; }
+        .btn-fechar-modal { background: none; border: none; color: #888; text-decoration: underline; margin-top: 5px; cursor: pointer; padding: 10px; }
     </style>
 </head>
 <body>
@@ -45,360 +58,360 @@
         
         <!-- PRODUTO 1 -->
         <div class="card" data-preco-pix="110" data-preco-cartao="120">
-            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Produto 1">
+            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Ignite V000">
             <div class="info-produto">
-                <h3 class="nome-produto">Produto 1 - Ignite V250</h3>
+                <h3 class="nome-produto">Ignite V000</h3>
                 <div class="valores">
                     <span class="preco-vista"></span>
                     <span class="preco-cartao"></span>
                 </div>
                 <div class="lista-sabores">
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> Aloe Grape Ice (aloe vera com uvas e menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> Banana Coconut Water (banana com água de coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> Banana Ice (banana com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> Blueberry Ice (mirtilos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> Blueberry Strawberry Coconut (mirtilos com morangos e coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> Cactus Lime Soda (soda de limão com toques de cactus)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> Icy Mint (menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> Minty Melon (menta com melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> Menthol (menta com hortelã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> Peach Mango (pêssego com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> Pineapple Ice (abacaxi com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> Pineapple Mango (abacaxi com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> Pineapple Kiwi Dragon Fruit (abacaxi com kiwi e pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> Strawberry Ice (morangos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> Strawberry Kiwi (morangos com kiwi)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> Sweet And Sour Pomegranate (romã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> Strawberry Banana (morangos com banana)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> Watermelon Ice (melancia com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> Watermelon Dragon Fruit (melancia com pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> Watermelon Mix (mix de melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> Green Apple (maça verde)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> Grape Ice (uvas com menta)</label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Aloe Grape Ice</span><span class="descricao-sabor">aloe vera com uvas e menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> <div class="textos-sabor"><span class="destaque-sabor">Banana Coconut Water</span><span class="descricao-sabor">banana com água de coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> <div class="textos-sabor"><span class="destaque-sabor">Banana Ice</span><span class="descricao-sabor">banana com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Ice</span><span class="descricao-sabor">mirtilos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Strawberry Coconut</span><span class="descricao-sabor">mirtilos com morangos e coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> <div class="textos-sabor"><span class="destaque-sabor">Cactus Lime Soda</span><span class="descricao-sabor">soda de limão com toques de cactus</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> <div class="textos-sabor"><span class="destaque-sabor">Icy Mint</span><span class="descricao-sabor">menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> <div class="textos-sabor"><span class="destaque-sabor">Minty Melon</span><span class="descricao-sabor">menta com melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> <div class="textos-sabor"><span class="destaque-sabor">Menthol</span><span class="descricao-sabor">menta com hortelã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> <div class="textos-sabor"><span class="destaque-sabor">Peach Mango</span><span class="descricao-sabor">pêssego com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Ice</span><span class="descricao-sabor">abacaxi com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Mango</span><span class="descricao-sabor">abacaxi com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Kiwi Dragon Fruit</span><span class="descricao-sabor">abacaxi com kiwi e pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Ice</span><span class="descricao-sabor">morangos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Kiwi</span><span class="descricao-sabor">morangos com kiwi</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> <div class="textos-sabor"><span class="destaque-sabor">Sweet And Sour Pomegranate</span><span class="descricao-sabor">romã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Banana</span><span class="descricao-sabor">morangos com banana</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Ice</span><span class="descricao-sabor">melancia com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Dragon Fruit</span><span class="descricao-sabor">melancia com pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Mix</span><span class="descricao-sabor">mix de melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> <div class="textos-sabor"><span class="destaque-sabor">Green Apple</span><span class="descricao-sabor">maça verde</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Grape Ice</span><span class="descricao-sabor">uvas com menta</span></div></label>
                 </div>
             </div>
         </div>
 
         <!-- PRODUTO 2 -->
         <div class="card" data-preco-pix="120" data-preco-cartao="130">
-            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Produto 2">
+            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Ignite V100">
             <div class="info-produto">
-                <h3 class="nome-produto">Produto 2 - Ignite V250</h3>
+                <h3 class="nome-produto">Ignite V100</h3>
                 <div class="valores">
                     <span class="preco-vista"></span>
                     <span class="preco-cartao"></span>
                 </div>
                 <div class="lista-sabores">
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> Aloe Grape Ice (aloe vera com uvas e menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> Banana Coconut Water (banana com água de coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> Banana Ice (banana com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> Blueberry Ice (mirtilos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> Blueberry Strawberry Coconut (mirtilos com morangos e coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> Cactus Lime Soda (soda de limão com toques de cactus)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> Icy Mint (menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> Minty Melon (menta com melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> Menthol (menta com hortelã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> Peach Mango (pêssego com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> Pineapple Ice (abacaxi com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> Pineapple Mango (abacaxi com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> Pineapple Kiwi Dragon Fruit (abacaxi com kiwi e pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> Strawberry Ice (morangos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> Strawberry Kiwi (morangos com kiwi)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> Sweet And Sour Pomegranate (romã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> Strawberry Banana (morangos com banana)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> Watermelon Ice (melancia com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> Watermelon Dragon Fruit (melancia com pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> Watermelon Mix (mix de melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> Green Apple (maça verde)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> Grape Ice (uvas com menta)</label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Aloe Grape Ice</span><span class="descricao-sabor">aloe vera com uvas e menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> <div class="textos-sabor"><span class="destaque-sabor">Banana Coconut Water</span><span class="descricao-sabor">banana com água de coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> <div class="textos-sabor"><span class="destaque-sabor">Banana Ice</span><span class="descricao-sabor">banana com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Ice</span><span class="descricao-sabor">mirtilos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Strawberry Coconut</span><span class="descricao-sabor">mirtilos com morangos e coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> <div class="textos-sabor"><span class="destaque-sabor">Cactus Lime Soda</span><span class="descricao-sabor">soda de limão com toques de cactus</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> <div class="textos-sabor"><span class="destaque-sabor">Icy Mint</span><span class="descricao-sabor">menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> <div class="textos-sabor"><span class="destaque-sabor">Minty Melon</span><span class="descricao-sabor">menta com melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> <div class="textos-sabor"><span class="destaque-sabor">Menthol</span><span class="descricao-sabor">menta com hortelã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> <div class="textos-sabor"><span class="destaque-sabor">Peach Mango</span><span class="descricao-sabor">pêssego com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Ice</span><span class="descricao-sabor">abacaxi com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Mango</span><span class="descricao-sabor">abacaxi com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Kiwi Dragon Fruit</span><span class="descricao-sabor">abacaxi com kiwi e pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Ice</span><span class="descricao-sabor">morangos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Kiwi</span><span class="descricao-sabor">morangos com kiwi</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> <div class="textos-sabor"><span class="destaque-sabor">Sweet And Sour Pomegranate</span><span class="descricao-sabor">romã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Banana</span><span class="descricao-sabor">morangos com banana</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Ice</span><span class="descricao-sabor">melancia com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Dragon Fruit</span><span class="descricao-sabor">melancia com pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Mix</span><span class="descricao-sabor">mix de melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> <div class="textos-sabor"><span class="destaque-sabor">Green Apple</span><span class="descricao-sabor">maça verde</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Grape Ice</span><span class="descricao-sabor">uvas com menta</span></div></label>
                 </div>
             </div>
         </div>
 
         <!-- PRODUTO 3 -->
         <div class="card" data-preco-pix="130" data-preco-cartao="140">
-            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Produto 3">
+            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Ignite V200">
             <div class="info-produto">
-                <h3 class="nome-produto">Produto 3 - Ignite V250</h3>
+                <h3 class="nome-produto">Ignite V200</h3>
                 <div class="valores">
                     <span class="preco-vista"></span>
                     <span class="preco-cartao"></span>
                 </div>
                 <div class="lista-sabores">
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> Aloe Grape Ice (aloe vera com uvas e menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> Banana Coconut Water (banana com água de coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> Banana Ice (banana com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> Blueberry Ice (mirtilos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> Blueberry Strawberry Coconut (mirtilos com morangos e coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> Cactus Lime Soda (soda de limão com toques de cactus)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> Icy Mint (menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> Minty Melon (menta com melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> Menthol (menta com hortelã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> Peach Mango (pêssego com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> Pineapple Ice (abacaxi com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> Pineapple Mango (abacaxi com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> Pineapple Kiwi Dragon Fruit (abacaxi com kiwi e pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> Strawberry Ice (morangos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> Strawberry Kiwi (morangos com kiwi)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> Sweet And Sour Pomegranate (romã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> Strawberry Banana (morangos com banana)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> Watermelon Ice (melancia com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> Watermelon Dragon Fruit (melancia com pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> Watermelon Mix (mix de melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> Green Apple (maça verde)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> Grape Ice (uvas com menta)</label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Aloe Grape Ice</span><span class="descricao-sabor">aloe vera com uvas e menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> <div class="textos-sabor"><span class="destaque-sabor">Banana Coconut Water</span><span class="descricao-sabor">banana com água de coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> <div class="textos-sabor"><span class="destaque-sabor">Banana Ice</span><span class="descricao-sabor">banana com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Ice</span><span class="descricao-sabor">mirtilos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Strawberry Coconut</span><span class="descricao-sabor">mirtilos com morangos e coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> <div class="textos-sabor"><span class="destaque-sabor">Cactus Lime Soda</span><span class="descricao-sabor">soda de limão com toques de cactus</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> <div class="textos-sabor"><span class="destaque-sabor">Icy Mint</span><span class="descricao-sabor">menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> <div class="textos-sabor"><span class="destaque-sabor">Minty Melon</span><span class="descricao-sabor">menta com melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> <div class="textos-sabor"><span class="destaque-sabor">Menthol</span><span class="descricao-sabor">menta com hortelã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> <div class="textos-sabor"><span class="destaque-sabor">Peach Mango</span><span class="descricao-sabor">pêssego com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Ice</span><span class="descricao-sabor">abacaxi com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Mango</span><span class="descricao-sabor">abacaxi com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Kiwi Dragon Fruit</span><span class="descricao-sabor">abacaxi com kiwi e pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Ice</span><span class="descricao-sabor">morangos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Kiwi</span><span class="descricao-sabor">morangos com kiwi</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> <div class="textos-sabor"><span class="destaque-sabor">Sweet And Sour Pomegranate</span><span class="descricao-sabor">romã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Banana</span><span class="descricao-sabor">morangos com banana</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Ice</span><span class="descricao-sabor">melancia com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Dragon Fruit</span><span class="descricao-sabor">melancia com pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Mix</span><span class="descricao-sabor">mix de melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> <div class="textos-sabor"><span class="destaque-sabor">Green Apple</span><span class="descricao-sabor">maça verde</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Grape Ice</span><span class="descricao-sabor">uvas com menta</span></div></label>
                 </div>
             </div>
         </div>
 
         <!-- PRODUTO 4 -->
         <div class="card" data-preco-pix="140" data-preco-cartao="150">
-            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Produto 4">
+            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Ignite V300">
             <div class="info-produto">
-                <h3 class="nome-produto">Produto 4 - Ignite V250</h3>
+                <h3 class="nome-produto">Ignite V300</h3>
                 <div class="valores">
                     <span class="preco-vista"></span>
                     <span class="preco-cartao"></span>
                 </div>
                 <div class="lista-sabores">
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> Aloe Grape Ice (aloe vera com uvas e menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> Banana Coconut Water (banana com água de coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> Banana Ice (banana com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> Blueberry Ice (mirtilos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> Blueberry Strawberry Coconut (mirtilos com morangos e coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> Cactus Lime Soda (soda de limão com toques de cactus)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> Icy Mint (menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> Minty Melon (menta com melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> Menthol (menta com hortelã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> Peach Mango (pêssego com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> Pineapple Ice (abacaxi com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> Pineapple Mango (abacaxi com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> Pineapple Kiwi Dragon Fruit (abacaxi com kiwi e pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> Strawberry Ice (morangos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> Strawberry Kiwi (morangos com kiwi)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> Sweet And Sour Pomegranate (romã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> Strawberry Banana (morangos com banana)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> Watermelon Ice (melancia com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> Watermelon Dragon Fruit (melancia com pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> Watermelon Mix (mix de melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> Green Apple (maça verde)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> Grape Ice (uvas com menta)</label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Aloe Grape Ice</span><span class="descricao-sabor">aloe vera com uvas e menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> <div class="textos-sabor"><span class="destaque-sabor">Banana Coconut Water</span><span class="descricao-sabor">banana com água de coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> <div class="textos-sabor"><span class="destaque-sabor">Banana Ice</span><span class="descricao-sabor">banana com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Ice</span><span class="descricao-sabor">mirtilos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Strawberry Coconut</span><span class="descricao-sabor">mirtilos com morangos e coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> <div class="textos-sabor"><span class="destaque-sabor">Cactus Lime Soda</span><span class="descricao-sabor">soda de limão com toques de cactus</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> <div class="textos-sabor"><span class="destaque-sabor">Icy Mint</span><span class="descricao-sabor">menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> <div class="textos-sabor"><span class="destaque-sabor">Minty Melon</span><span class="descricao-sabor">menta com melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> <div class="textos-sabor"><span class="destaque-sabor">Menthol</span><span class="descricao-sabor">menta com hortelã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> <div class="textos-sabor"><span class="destaque-sabor">Peach Mango</span><span class="descricao-sabor">pêssego com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Ice</span><span class="descricao-sabor">abacaxi com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Mango</span><span class="descricao-sabor">abacaxi com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Kiwi Dragon Fruit</span><span class="descricao-sabor">abacaxi com kiwi e pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Ice</span><span class="descricao-sabor">morangos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Kiwi</span><span class="descricao-sabor">morangos com kiwi</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> <div class="textos-sabor"><span class="destaque-sabor">Sweet And Sour Pomegranate</span><span class="descricao-sabor">romã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Banana</span><span class="descricao-sabor">morangos com banana</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Ice</span><span class="descricao-sabor">melancia com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Dragon Fruit</span><span class="descricao-sabor">melancia com pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Mix</span><span class="descricao-sabor">mix de melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> <div class="textos-sabor"><span class="destaque-sabor">Green Apple</span><span class="descricao-sabor">maça verde</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Grape Ice</span><span class="descricao-sabor">uvas com menta</span></div></label>
                 </div>
             </div>
         </div>
 
         <!-- PRODUTO 5 -->
         <div class="card" data-preco-pix="150" data-preco-cartao="160">
-            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Produto 5">
+            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Ignite V400">
             <div class="info-produto">
-                <h3 class="nome-produto">Produto 5 - Ignite V250</h3>
+                <h3 class="nome-produto">Ignite V400</h3>
                 <div class="valores">
                     <span class="preco-vista"></span>
                     <span class="preco-cartao"></span>
                 </div>
                 <div class="lista-sabores">
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> Aloe Grape Ice (aloe vera com uvas e menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> Banana Coconut Water (banana com água de coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> Banana Ice (banana com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> Blueberry Ice (mirtilos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> Blueberry Strawberry Coconut (mirtilos com morangos e coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> Cactus Lime Soda (soda de limão com toques de cactus)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> Icy Mint (menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> Minty Melon (menta com melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> Menthol (menta com hortelã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> Peach Mango (pêssego com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> Pineapple Ice (abacaxi com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> Pineapple Mango (abacaxi com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> Pineapple Kiwi Dragon Fruit (abacaxi com kiwi e pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> Strawberry Ice (morangos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> Strawberry Kiwi (morangos com kiwi)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> Sweet And Sour Pomegranate (romã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> Strawberry Banana (morangos com banana)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> Watermelon Ice (melancia com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> Watermelon Dragon Fruit (melancia com pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> Watermelon Mix (mix de melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> Green Apple (maça verde)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> Grape Ice (uvas com menta)</label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Aloe Grape Ice</span><span class="descricao-sabor">aloe vera com uvas e menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> <div class="textos-sabor"><span class="destaque-sabor">Banana Coconut Water</span><span class="descricao-sabor">banana com água de coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> <div class="textos-sabor"><span class="destaque-sabor">Banana Ice</span><span class="descricao-sabor">banana com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Ice</span><span class="descricao-sabor">mirtilos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Strawberry Coconut</span><span class="descricao-sabor">mirtilos com morangos e coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> <div class="textos-sabor"><span class="destaque-sabor">Cactus Lime Soda</span><span class="descricao-sabor">soda de limão com toques de cactus</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> <div class="textos-sabor"><span class="destaque-sabor">Icy Mint</span><span class="descricao-sabor">menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> <div class="textos-sabor"><span class="destaque-sabor">Minty Melon</span><span class="descricao-sabor">menta com melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> <div class="textos-sabor"><span class="destaque-sabor">Menthol</span><span class="descricao-sabor">menta com hortelã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> <div class="textos-sabor"><span class="destaque-sabor">Peach Mango</span><span class="descricao-sabor">pêssego com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Ice</span><span class="descricao-sabor">abacaxi com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Mango</span><span class="descricao-sabor">abacaxi com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Kiwi Dragon Fruit</span><span class="descricao-sabor">abacaxi com kiwi e pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Ice</span><span class="descricao-sabor">morangos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Kiwi</span><span class="descricao-sabor">morangos com kiwi</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> <div class="textos-sabor"><span class="destaque-sabor">Sweet And Sour Pomegranate</span><span class="descricao-sabor">romã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Banana</span><span class="descricao-sabor">morangos com banana</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Ice</span><span class="descricao-sabor">melancia com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Dragon Fruit</span><span class="descricao-sabor">melancia com pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Mix</span><span class="descricao-sabor">mix de melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> <div class="textos-sabor"><span class="destaque-sabor">Green Apple</span><span class="descricao-sabor">maça verde</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Grape Ice</span><span class="descricao-sabor">uvas com menta</span></div></label>
                 </div>
             </div>
         </div>
 
         <!-- PRODUTO 6 -->
         <div class="card" data-preco-pix="160" data-preco-cartao="170">
-            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Produto 6">
+            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Ignite V500">
             <div class="info-produto">
-                <h3 class="nome-produto">Produto 6 - Ignite V250</h3>
+                <h3 class="nome-produto">Ignite V500</h3>
                 <div class="valores">
                     <span class="preco-vista"></span>
                     <span class="preco-cartao"></span>
                 </div>
                 <div class="lista-sabores">
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> Aloe Grape Ice (aloe vera com uvas e menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> Banana Coconut Water (banana com água de coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> Banana Ice (banana com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> Blueberry Ice (mirtilos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> Blueberry Strawberry Coconut (mirtilos com morangos e coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> Cactus Lime Soda (soda de limão com toques de cactus)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> Icy Mint (menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> Minty Melon (menta com melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> Menthol (menta com hortelã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> Peach Mango (pêssego com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> Pineapple Ice (abacaxi com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> Pineapple Mango (abacaxi com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> Pineapple Kiwi Dragon Fruit (abacaxi com kiwi e pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> Strawberry Ice (morangos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> Strawberry Kiwi (morangos com kiwi)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> Sweet And Sour Pomegranate (romã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> Strawberry Banana (morangos com banana)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> Watermelon Ice (melancia com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> Watermelon Dragon Fruit (melancia com pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> Watermelon Mix (mix de melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> Green Apple (maça verde)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> Grape Ice (uvas com menta)</label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Aloe Grape Ice</span><span class="descricao-sabor">aloe vera com uvas e menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> <div class="textos-sabor"><span class="destaque-sabor">Banana Coconut Water</span><span class="descricao-sabor">banana com água de coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> <div class="textos-sabor"><span class="destaque-sabor">Banana Ice</span><span class="descricao-sabor">banana com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Ice</span><span class="descricao-sabor">mirtilos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Strawberry Coconut</span><span class="descricao-sabor">mirtilos com morangos e coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> <div class="textos-sabor"><span class="destaque-sabor">Cactus Lime Soda</span><span class="descricao-sabor">soda de limão com toques de cactus</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> <div class="textos-sabor"><span class="destaque-sabor">Icy Mint</span><span class="descricao-sabor">menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> <div class="textos-sabor"><span class="destaque-sabor">Minty Melon</span><span class="descricao-sabor">menta com melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> <div class="textos-sabor"><span class="destaque-sabor">Menthol</span><span class="descricao-sabor">menta com hortelã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> <div class="textos-sabor"><span class="destaque-sabor">Peach Mango</span><span class="descricao-sabor">pêssego com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Ice</span><span class="descricao-sabor">abacaxi com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Mango</span><span class="descricao-sabor">abacaxi com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Kiwi Dragon Fruit</span><span class="descricao-sabor">abacaxi com kiwi e pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Ice</span><span class="descricao-sabor">morangos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Kiwi</span><span class="descricao-sabor">morangos com kiwi</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> <div class="textos-sabor"><span class="destaque-sabor">Sweet And Sour Pomegranate</span><span class="descricao-sabor">romã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Banana</span><span class="descricao-sabor">morangos com banana</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Ice</span><span class="descricao-sabor">melancia com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Dragon Fruit</span><span class="descricao-sabor">melancia com pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Mix</span><span class="descricao-sabor">mix de melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> <div class="textos-sabor"><span class="destaque-sabor">Green Apple</span><span class="descricao-sabor">maça verde</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Grape Ice</span><span class="descricao-sabor">uvas com menta</span></div></label>
                 </div>
             </div>
         </div>
 
         <!-- PRODUTO 7 -->
         <div class="card" data-preco-pix="170" data-preco-cartao="180">
-            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Produto 7">
+            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Ignite V600">
             <div class="info-produto">
-                <h3 class="nome-produto">Produto 7 - Ignite V250</h3>
+                <h3 class="nome-produto">Ignite V600</h3>
                 <div class="valores">
                     <span class="preco-vista"></span>
                     <span class="preco-cartao"></span>
                 </div>
                 <div class="lista-sabores">
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> Aloe Grape Ice (aloe vera com uvas e menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> Banana Coconut Water (banana com água de coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> Banana Ice (banana com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> Blueberry Ice (mirtilos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> Blueberry Strawberry Coconut (mirtilos com morangos e coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> Cactus Lime Soda (soda de limão com toques de cactus)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> Icy Mint (menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> Minty Melon (menta com melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> Menthol (menta com hortelã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> Peach Mango (pêssego com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> Pineapple Ice (abacaxi com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> Pineapple Mango (abacaxi com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> Pineapple Kiwi Dragon Fruit (abacaxi com kiwi e pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> Strawberry Ice (morangos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> Strawberry Kiwi (morangos com kiwi)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> Sweet And Sour Pomegranate (romã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> Strawberry Banana (morangos com banana)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> Watermelon Ice (melancia com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> Watermelon Dragon Fruit (melancia com pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> Watermelon Mix (mix de melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> Green Apple (maça verde)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> Grape Ice (uvas com menta)</label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Aloe Grape Ice</span><span class="descricao-sabor">aloe vera com uvas e menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> <div class="textos-sabor"><span class="destaque-sabor">Banana Coconut Water</span><span class="descricao-sabor">banana com água de coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> <div class="textos-sabor"><span class="destaque-sabor">Banana Ice</span><span class="descricao-sabor">banana com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Ice</span><span class="descricao-sabor">mirtilos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Strawberry Coconut</span><span class="descricao-sabor">mirtilos com morangos e coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> <div class="textos-sabor"><span class="destaque-sabor">Cactus Lime Soda</span><span class="descricao-sabor">soda de limão com toques de cactus</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> <div class="textos-sabor"><span class="destaque-sabor">Icy Mint</span><span class="descricao-sabor">menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> <div class="textos-sabor"><span class="destaque-sabor">Minty Melon</span><span class="descricao-sabor">menta com melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> <div class="textos-sabor"><span class="destaque-sabor">Menthol</span><span class="descricao-sabor">menta com hortelã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> <div class="textos-sabor"><span class="destaque-sabor">Peach Mango</span><span class="descricao-sabor">pêssego com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Ice</span><span class="descricao-sabor">abacaxi com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Mango</span><span class="descricao-sabor">abacaxi com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Kiwi Dragon Fruit</span><span class="descricao-sabor">abacaxi com kiwi e pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Ice</span><span class="descricao-sabor">morangos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Kiwi</span><span class="descricao-sabor">morangos com kiwi</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> <div class="textos-sabor"><span class="destaque-sabor">Sweet And Sour Pomegranate</span><span class="descricao-sabor">romã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Banana</span><span class="descricao-sabor">morangos com banana</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Ice</span><span class="descricao-sabor">melancia com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Dragon Fruit</span><span class="descricao-sabor">melancia com pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Mix</span><span class="descricao-sabor">mix de melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> <div class="textos-sabor"><span class="destaque-sabor">Green Apple</span><span class="descricao-sabor">maça verde</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Grape Ice</span><span class="descricao-sabor">uvas com menta</span></div></label>
                 </div>
             </div>
         </div>
 
         <!-- PRODUTO 8 -->
         <div class="card" data-preco-pix="180" data-preco-cartao="190">
-            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Produto 8">
+            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Ignite V700">
             <div class="info-produto">
-                <h3 class="nome-produto">Produto 8 - Ignite V250</h3>
+                <h3 class="nome-produto">Ignite V700</h3>
                 <div class="valores">
                     <span class="preco-vista"></span>
                     <span class="preco-cartao"></span>
                 </div>
                 <div class="lista-sabores">
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> Aloe Grape Ice (aloe vera com uvas e menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> Banana Coconut Water (banana com água de coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> Banana Ice (banana com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> Blueberry Ice (mirtilos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> Blueberry Strawberry Coconut (mirtilos com morangos e coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> Cactus Lime Soda (soda de limão com toques de cactus)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> Icy Mint (menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> Minty Melon (menta com melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> Menthol (menta com hortelã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> Peach Mango (pêssego com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> Pineapple Ice (abacaxi com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> Pineapple Mango (abacaxi com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> Pineapple Kiwi Dragon Fruit (abacaxi com kiwi e pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> Strawberry Ice (morangos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> Strawberry Kiwi (morangos com kiwi)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> Sweet And Sour Pomegranate (romã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> Strawberry Banana (morangos com banana)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> Watermelon Ice (melancia com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> Watermelon Dragon Fruit (melancia com pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> Watermelon Mix (mix de melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> Green Apple (maça verde)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> Grape Ice (uvas com menta)</label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Aloe Grape Ice</span><span class="descricao-sabor">aloe vera com uvas e menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> <div class="textos-sabor"><span class="destaque-sabor">Banana Coconut Water</span><span class="descricao-sabor">banana com água de coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> <div class="textos-sabor"><span class="destaque-sabor">Banana Ice</span><span class="descricao-sabor">banana com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Ice</span><span class="descricao-sabor">mirtilos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Strawberry Coconut</span><span class="descricao-sabor">mirtilos com morangos e coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> <div class="textos-sabor"><span class="destaque-sabor">Cactus Lime Soda</span><span class="descricao-sabor">soda de limão com toques de cactus</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> <div class="textos-sabor"><span class="destaque-sabor">Icy Mint</span><span class="descricao-sabor">menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> <div class="textos-sabor"><span class="destaque-sabor">Minty Melon</span><span class="descricao-sabor">menta com melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> <div class="textos-sabor"><span class="destaque-sabor">Menthol</span><span class="descricao-sabor">menta com hortelã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> <div class="textos-sabor"><span class="destaque-sabor">Peach Mango</span><span class="descricao-sabor">pêssego com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Ice</span><span class="descricao-sabor">abacaxi com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Mango</span><span class="descricao-sabor">abacaxi com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Kiwi Dragon Fruit</span><span class="descricao-sabor">abacaxi com kiwi e pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Ice</span><span class="descricao-sabor">morangos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Kiwi</span><span class="descricao-sabor">morangos com kiwi</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> <div class="textos-sabor"><span class="destaque-sabor">Sweet And Sour Pomegranate</span><span class="descricao-sabor">romã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Banana</span><span class="descricao-sabor">morangos com banana</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Ice</span><span class="descricao-sabor">melancia com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Dragon Fruit</span><span class="descricao-sabor">melancia com pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Mix</span><span class="descricao-sabor">mix de melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> <div class="textos-sabor"><span class="destaque-sabor">Green Apple</span><span class="descricao-sabor">maça verde</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Grape Ice</span><span class="descricao-sabor">uvas com menta</span></div></label>
                 </div>
             </div>
         </div>
 
         <!-- PRODUTO 9 -->
         <div class="card" data-preco-pix="190" data-preco-cartao="200">
-            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Produto 9">
+            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Ignite V800">
             <div class="info-produto">
-                <h3 class="nome-produto">Produto 9 - Ignite V250</h3>
+                <h3 class="nome-produto">Ignite V800</h3>
                 <div class="valores">
                     <span class="preco-vista"></span>
                     <span class="preco-cartao"></span>
                 </div>
                 <div class="lista-sabores">
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> Aloe Grape Ice (aloe vera com uvas e menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> Banana Coconut Water (banana com água de coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> Banana Ice (banana com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> Blueberry Ice (mirtilos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> Blueberry Strawberry Coconut (mirtilos com morangos e coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> Cactus Lime Soda (soda de limão com toques de cactus)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> Icy Mint (menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> Minty Melon (menta com melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> Menthol (menta com hortelã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> Peach Mango (pêssego com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> Pineapple Ice (abacaxi com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> Pineapple Mango (abacaxi com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> Pineapple Kiwi Dragon Fruit (abacaxi com kiwi e pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> Strawberry Ice (morangos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> Strawberry Kiwi (morangos com kiwi)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> Sweet And Sour Pomegranate (romã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> Strawberry Banana (morangos com banana)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> Watermelon Ice (melancia com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> Watermelon Dragon Fruit (melancia com pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> Watermelon Mix (mix de melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> Green Apple (maça verde)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> Grape Ice (uvas com menta)</label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Aloe Grape Ice</span><span class="descricao-sabor">aloe vera com uvas e menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> <div class="textos-sabor"><span class="destaque-sabor">Banana Coconut Water</span><span class="descricao-sabor">banana com água de coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> <div class="textos-sabor"><span class="destaque-sabor">Banana Ice</span><span class="descricao-sabor">banana com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Ice</span><span class="descricao-sabor">mirtilos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Strawberry Coconut</span><span class="descricao-sabor">mirtilos com morangos e coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> <div class="textos-sabor"><span class="destaque-sabor">Cactus Lime Soda</span><span class="descricao-sabor">soda de limão com toques de cactus</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> <div class="textos-sabor"><span class="destaque-sabor">Icy Mint</span><span class="descricao-sabor">menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> <div class="textos-sabor"><span class="destaque-sabor">Minty Melon</span><span class="descricao-sabor">menta com melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> <div class="textos-sabor"><span class="destaque-sabor">Menthol</span><span class="descricao-sabor">menta com hortelã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> <div class="textos-sabor"><span class="destaque-sabor">Peach Mango</span><span class="descricao-sabor">pêssego com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Ice</span><span class="descricao-sabor">abacaxi com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Mango</span><span class="descricao-sabor">abacaxi com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Kiwi Dragon Fruit</span><span class="descricao-sabor">abacaxi com kiwi e pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Ice</span><span class="descricao-sabor">morangos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Kiwi</span><span class="descricao-sabor">morangos com kiwi</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> <div class="textos-sabor"><span class="destaque-sabor">Sweet And Sour Pomegranate</span><span class="descricao-sabor">romã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Banana</span><span class="descricao-sabor">morangos com banana</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Ice</span><span class="descricao-sabor">melancia com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Dragon Fruit</span><span class="descricao-sabor">melancia com pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Mix</span><span class="descricao-sabor">mix de melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> <div class="textos-sabor"><span class="destaque-sabor">Green Apple</span><span class="descricao-sabor">maça verde</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Grape Ice</span><span class="descricao-sabor">uvas com menta</span></div></label>
                 </div>
             </div>
         </div>
 
         <!-- PRODUTO 10 -->
-        <div class="card" data-preco-pix="200" data-preco-cartao="210">
-            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Produto 10">
+        <div class="card" data-preco-pix="210" data-preco-cartao="220">
+            <img src="https://mundovape.net/wp-content/uploads/2024/07/V50-Black-Todos.jpg" alt="Ignite V900">
             <div class="info-produto">
-                <h3 class="nome-produto">Produto 10 - Ignite V250</h3>
+                <h3 class="nome-produto">Ignite V900</h3>
                 <div class="valores">
                     <span class="preco-vista"></span>
                     <span class="preco-cartao"></span>
                 </div>
                 <div class="lista-sabores">
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> Aloe Grape Ice (aloe vera com uvas e menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> Banana Coconut Water (banana com água de coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> Banana Ice (banana com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> Blueberry Ice (mirtilos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> Blueberry Strawberry Coconut (mirtilos com morangos e coco)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> Cactus Lime Soda (soda de limão com toques de cactus)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> Icy Mint (menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> Minty Melon (menta com melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> Menthol (menta com hortelã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> Peach Mango (pêssego com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> Pineapple Ice (abacaxi com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> Pineapple Mango (abacaxi com manga)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> Pineapple Kiwi Dragon Fruit (abacaxi com kiwi e pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> Strawberry Ice (morangos com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> Strawberry Kiwi (morangos com kiwi)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> Sweet And Sour Pomegranate (romã)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> Strawberry Banana (morangos com banana)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> Watermelon Ice (melancia com menta)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> Watermelon Dragon Fruit (melancia com pitaya)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> Watermelon Mix (mix de melancia)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> Green Apple (maça verde)</label>
-                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> Grape Ice (uvas com menta)</label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Aloe Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Aloe Grape Ice</span><span class="descricao-sabor">aloe vera com uvas e menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Coconut Water"> <div class="textos-sabor"><span class="destaque-sabor">Banana Coconut Water</span><span class="descricao-sabor">banana com água de coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Banana Ice"> <div class="textos-sabor"><span class="destaque-sabor">Banana Ice</span><span class="descricao-sabor">banana com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Ice</span><span class="descricao-sabor">mirtilos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Blueberry Strawberry Coconut"> <div class="textos-sabor"><span class="destaque-sabor">Blueberry Strawberry Coconut</span><span class="descricao-sabor">mirtilos com morangos e coco</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Cactus Lime Soda"> <div class="textos-sabor"><span class="destaque-sabor">Cactus Lime Soda</span><span class="descricao-sabor">soda de limão com toques de cactus</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Icy Mint"> <div class="textos-sabor"><span class="destaque-sabor">Icy Mint</span><span class="descricao-sabor">menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Minty Melon"> <div class="textos-sabor"><span class="destaque-sabor">Minty Melon</span><span class="descricao-sabor">menta com melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Menthol"> <div class="textos-sabor"><span class="destaque-sabor">Menthol</span><span class="descricao-sabor">menta com hortelã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Peach Mango"> <div class="textos-sabor"><span class="destaque-sabor">Peach Mango</span><span class="descricao-sabor">pêssego com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Ice"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Ice</span><span class="descricao-sabor">abacaxi com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Mango"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Mango</span><span class="descricao-sabor">abacaxi com manga</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Pineapple Kiwi Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Pineapple Kiwi Dragon Fruit</span><span class="descricao-sabor">abacaxi com kiwi e pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Ice"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Ice</span><span class="descricao-sabor">morangos com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Kiwi"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Kiwi</span><span class="descricao-sabor">morangos com kiwi</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Sweet And Sour Pomegranate"> <div class="textos-sabor"><span class="destaque-sabor">Sweet And Sour Pomegranate</span><span class="descricao-sabor">romã</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Strawberry Banana"> <div class="textos-sabor"><span class="destaque-sabor">Strawberry Banana</span><span class="descricao-sabor">morangos com banana</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Ice"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Ice</span><span class="descricao-sabor">melancia com menta</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Dragon Fruit"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Dragon Fruit</span><span class="descricao-sabor">melancia com pitaya</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Watermelon Mix"> <div class="textos-sabor"><span class="destaque-sabor">Watermelon Mix</span><span class="descricao-sabor">mix de melancia</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Green Apple"> <div class="textos-sabor"><span class="destaque-sabor">Green Apple</span><span class="descricao-sabor">maça verde</span></div></label>
+                    <label class="opcao-sabor"><input type="checkbox" class="sabor-checkbox" value="Grape Ice"> <div class="textos-sabor"><span class="destaque-sabor">Grape Ice</span><span class="descricao-sabor">uvas com menta</span></div></label>
                 </div>
             </div>
         </div>
@@ -408,20 +421,24 @@
     <!-- Botão abre Modal -->
     <button class="btn-flutuante" onclick="abrirModalPagamento()">Finalizar Pedido</button>
 
-    <!-- Modal de Pagamento -->
+    <!-- Modal de Confirmação e Pagamento -->
     <div class="modal-fundo" id="modalPagamento">
         <div class="modal-conteudo">
-            <h2>Como deseja pagar?</h2>
+            <h2>Confira seu Pedido</h2>
+            
+            <div class="caixa-resumo" id="resumoVisualHtml"></div>
+
+            <h3 style="font-size: 1rem; color: #fff; margin-top: 0; margin-bottom: 15px;">Como deseja pagar?</h3>
             <button class="btn-pagamento btn-pix" onclick="processarPedido('Pix/Dinheiro')">Pix ou Dinheiro</button>
             <button class="btn-pagamento btn-cartao" onclick="processarPedido('Cartão')">Cartão de Crédito/Débito</button>
-            <button class="btn-fechar-modal" onclick="fecharModal()">Cancelar</button>
+            <button class="btn-fechar-modal" onclick="fecharModal()">Voltar e Editar</button>
         </div>
     </div>
 
+    <!-- Script de Lógica -->
     <script>
         window.onload = function() {
             const cards = document.querySelectorAll('.card');
-            
             cards.forEach(card => {
                 let valorPix = parseFloat(card.getAttribute('data-preco-pix'));
                 let valorCartao = parseFloat(card.getAttribute('data-preco-cartao'));
@@ -436,12 +453,49 @@
 
         function abrirModalPagamento() {
             let temItemMarcado = false;
-            document.querySelectorAll('.sabor-checkbox:checked').forEach(() => { temItemMarcado = true; });
+            let resumoHTML = "<ul>";
             
+            let valorTotalPix = 0;
+            let valorTotalCartao = 0;
+
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const nomeProduto = card.querySelector('.nome-produto').innerText;
+                const checkboxes = card.querySelectorAll('.sabor-checkbox:checked');
+                
+                if(checkboxes.length > 0) {
+                    temItemMarcado = true;
+                    resumoHTML += `<li class="resumo-titulo">${nomeProduto}</li>`;
+                    
+                    const precoPixProduto = parseFloat(card.getAttribute('data-preco-pix'));
+                    const precoCartaoProduto = parseFloat(card.getAttribute('data-preco-cartao'));
+                    
+                    checkboxes.forEach(box => {
+                        resumoHTML += `<li>- 1x ${box.value}</li>`;
+                        valorTotalPix += precoPixProduto;
+                        valorTotalCartao += precoCartaoProduto;
+                    });
+                }
+            });
+
             if(!temItemMarcado) {
                 alert("Por favor, selecione pelo menos um sabor antes de finalizar o pedido!");
                 return;
             }
+
+            resumoHTML += "</ul>";
+            
+            let pixFormatado = valorTotalPix.toFixed(2).replace('.', ',');
+            let cartaoFormatado = valorTotalCartao.toFixed(2).replace('.', ',');
+            
+            resumoHTML += `
+            <div class="resumo-totais">
+                <span class="t-pix">Total no Pix: R$ ${pixFormatado}</span>
+                <span class="t-cartao">Total no Cartão: R$ ${cartaoFormatado}</span>
+            </div>`;
+
+            document.getElementById('resumoVisualHtml').innerHTML = resumoHTML;
             document.getElementById('modalPagamento').style.display = 'flex';
         }
 
@@ -472,7 +526,6 @@
                     checkboxes.forEach(box => {
                         pedidoTexto += `- 1x ${box.value}%0A`;
                         quantidadeTotalItens++; 
-                        
                         valorTotalPix += precoPixProduto;
                         valorTotalCartao += precoCartaoProduto;
                     });
