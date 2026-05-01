@@ -86,7 +86,6 @@
                 
                 const produtosAgrupados = {};
                 
-                // Organiza os dados puxando preço e imagem direto da planilha
                 dados.forEach(item => {
                     if (!produtosAgrupados[item.produto]) {
                         produtosAgrupados[item.produto] = {
@@ -124,7 +123,6 @@
                     </label>`;
                 });
 
-                // Transforma o número em formato de Real (R$)
                 const pixFormatado = parseFloat(dadosProduto.pix).toFixed(2).replace('.', ',');
                 const cartaoFormatado = parseFloat(dadosProduto.cartao).toFixed(2).replace('.', ',');
 
@@ -199,7 +197,9 @@
         }
 
         function processarPedido(formaDePagamentoSelecionada) {
+            // Substitua pelo seu número de WhatsApp com DDD
             const numeroWhatsApp = "5544999992222"; 
+            
             let pedidoTexto = "Olá! Gostaria de fazer o seguinte pedido:%0A%0A";
             let quantidadeTotalItens = 0; 
             let valorTotalPix = 0;
@@ -241,7 +241,9 @@
             pedidoTexto += `*Total a Pagar: R$ ${totalFormatado}*%0A`;
 
             fecharModal();
-            window.open(`https://wa.me/${numeroWhatsApp}?text=${pedidoTexto}`, '_blank');
+            
+            // Aqui está a alteração para abrir na mesma aba do navegador no celular
+            window.location.href = `https://wa.me/${numeroWhatsApp}?text=${pedidoTexto}`;
         }
     </script>
 </body>
