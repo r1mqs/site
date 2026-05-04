@@ -16,7 +16,6 @@
         
         .valores { margin-bottom: 10px; }
         .preco-vista { color: #ffffff; font-weight: bold; font-size: 0.95rem; display: block; }
-        .preco-cartao { font-size: 0.75rem; color: #888; display: block; margin-top: 2px; }
         
         .lista-sabores { background: #141414; border: 1px solid #2a2a2a; border-radius: 6px; padding: 5px 8px; height: 150px; overflow-y: auto; margin-top: auto; }
         .lista-sabores::-webkit-scrollbar { width: 4px; }
@@ -322,23 +321,20 @@
             pedidoTexto += enderecoFinalTexto;
             pedidoTexto += `*Total: R$ ${totalFormatado}*%0A`;
 
-            // Chama a API da InfinitePay
-            const payloadInfinitePay = {
-                "handle": "marquesricardo",
-                "items": [
-                    {
-                        "quantity": 1,
-                        "price": Math.round(valorTotal * 100), 
-                        "description": `Pedido Vapes - ${quantidadeTotalItens} itens`
-                    }
-                ]
+            // Novo Payload enviando para o seu Google Script
+            const payloadParaGoogle = {
+                valorEmCentavos: Math.round(valorTotal * 100),
+                descricao: `Pedido Vapes - ${quantidadeTotalItens} itens`
             };
 
             try {
-                const resposta = await fetch("https://api.checkout.infinitepay.io/links", {
+                // Sua URL oficial da ponte
+                const URL_DO_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbzQ7f5NUZvRZv_T8aCxSllRxM-JAErkcFg6hUJ7-Tt0y9F2lHVnofO5qlVLov9KcNWXew/exec";
+
+                const resposta = await fetch(URL_DO_GOOGLE_SCRIPT, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payloadInfinitePay)
+                    headers: { "Content-Type": "text/plain" }, 
+                    body: JSON.stringify(payloadParaGoogle)
                 });
 
                 const dados = await resposta.json();
@@ -348,9 +344,10 @@
                     pedidoTexto += `%0A💳 *Pague com Pix ou Cartão de Crédito aqui:* %0A${linkGerado}`;
                 } else {
                     pedidoTexto += `%0A⚠️ *Aguardando envio do link de pagamento.*`;
+                    console.log("Erro retornado:", dados);
                 }
             } catch (erro) {
-                console.error("Erro ao gerar link:", erro);
+                console.error("Erro na comunicação com o script:", erro);
                 pedidoTexto += `%0A⚠️ *Aguardando envio do link de pagamento.*`;
             }
 
