@@ -44,7 +44,6 @@
         
         .resumo-totais { border-top: 1px solid #333; margin-top: 10px; padding-top: 10px; font-weight: bold; }
         .resumo-totais .t-pix { color: #ffffff; display: block; font-size: 1rem; margin-bottom: 3px; }
-        .resumo-totais .t-cartao { color: #ffffff; display: block; font-size: 0.9rem; }
 
         .btn-pagamento { display: block; width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: none; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
         .btn-pix { background: #32bcad; color: white; } 
@@ -56,7 +55,6 @@
         .label-endereco { color: #bbb; font-size: 0.8rem; margin-top: 10px; display: block; text-align: left; }
         .obrigatorio { color: #ff4444; font-size: 0.8rem; margin-left: 3px; }
 
-        /* Estilos do Loading Novo */
         .tela-carregamento { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; }
         .spinner { width: 45px; height: 45px; border: 4px solid #2a2a2a; border-top: 4px solid #4caf50; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -74,19 +72,12 @@
         <div class="modal-conteudo">
             <h2>Confira seu Pedido</h2>
             
-            <div id="passo-pagamento">
+            <div id="passo-resumo">
                 <div class="caixa-resumo" id="resumoVisualHtml"></div>
-                <h3 style="font-size: 1rem; color: #fff; margin-top: 0; margin-bottom: 15px;">Como deseja pagar?</h3>
-                <button class="btn-pagamento btn-pix" onclick="irParaEntrega('Pix/Dinheiro')">Pix ou Dinheiro</button>
-                <button class="btn-pagamento btn-cartao" onclick="irParaEntrega('Cartão')">Cartão de Crédito/Débito</button>
-                <button class="btn-fechar-modal" onclick="fecharModal()">Voltar e Editar</button>
-            </div>
-
-            <div id="passo-entrega" style="display: none;">
                 <h3 style="font-size: 1rem; color: #fff; margin-top: 0; margin-bottom: 15px;">Forma de Recebimento</h3>
                 <button class="btn-pagamento btn-pix" onclick="finalizarPedido('Retirada')">Retirar no Local</button>
                 <button class="btn-pagamento btn-cartao" onclick="mostrarEndereco()">Entrega (Delivery)</button>
-                <button class="btn-fechar-modal" onclick="voltarPagamento()">Voltar</button>
+                <button class="btn-fechar-modal" onclick="fecharModal()">Voltar e Editar</button>
             </div>
 
             <div id="passo-endereco" style="display: none;">
@@ -110,7 +101,7 @@
                 <input type="text" id="end-ref" class="input-endereco" placeholder="Ex: Ao lado do mercado...">
 
                 <button class="btn-pagamento btn-pix" style="margin-top: 20px;" onclick="finalizarPedido('Entrega')">Confirmar Pedido</button>
-                <button class="btn-fechar-modal" onclick="voltarEntrega()">Voltar</button>
+                <button class="btn-fechar-modal" onclick="voltarResumo()">Voltar</button>
             </div>
 
         </div>
@@ -118,12 +109,9 @@
 
     <script>
         const API_ESTOQUE = "https://script.google.com/macros/s/AKfycbxpnrZKWVhy-inOHMA9qetReDBfUTeLt5JEEp6yUs3ca4rcXCgsmzyGbXYadHczL7HAZQ/exec"; 
-        
-        let formaPagamentoSelecionada = "";
         let intervaloProgresso;
 
         window.onload = function() {
-            // HTML da tela de loading atualizado
             document.getElementById('vitrineProdutos').innerHTML = `
                 <div class="tela-carregamento">
                     <div class="spinner"></div>
@@ -132,11 +120,10 @@
                 </div>
             `;
             
-            // Lógica do contador animado
             let progresso = 0;
             intervaloProgresso = setInterval(() => {
                 if (progresso < 92) {
-                    progresso += Math.floor(Math.random() * 12) + 3; // Pulos aleatórios para parecer real
+                    progresso += Math.floor(Math.random() * 12) + 3;
                     if (progresso > 92) progresso = 92;
                     const el = document.getElementById('loading-percent');
                     if(el) el.innerText = progresso + '%';
@@ -151,12 +138,10 @@
                 const resposta = await fetch(API_ESTOQUE);
                 const dados = await resposta.json();
                 
-                // Força o 100% quando os dados chegam do Google
                 clearInterval(intervaloProgresso);
                 const el = document.getElementById('loading-percent');
                 if(el) el.innerText = '100%';
 
-                // Aguarda 300ms para o cliente ver o 100% antes de mostrar os produtos
                 setTimeout(() => {
                     const produtosAgrupados = {};
                     
@@ -200,16 +185,14 @@
                 });
 
                 const pixFormatado = parseFloat(dadosProduto.pix).toFixed(2).replace('.', ',');
-                const cartaoFormatado = parseFloat(dadosProduto.cartao).toFixed(2).replace('.', ',');
 
                 const cardHTML = `
-                <div class="card" data-preco-pix="${dadosProduto.pix}" data-preco-cartao="${dadosProduto.cartao}">
+                <div class="card" data-preco-pix="${dadosProduto.pix}">
                     <img src="${dadosProduto.img}" alt="${nomeProduto}">
                     <div class="info-produto">
                         <h3 class="nome-produto">${nomeProduto}</h3>
                         <div class="valores">
-                            <span class="preco-vista">R$ ${pixFormatado} (no pix)</span>
-                            <span class="preco-cartao">ou R$ ${cartaoFormatado} no cartão em até 2x.</span>
+                            <span class="preco-vista">R$ ${pixFormatado}</span>
                         </div>
                         <div class="lista-sabores">
                             ${htmlSabores}
@@ -224,8 +207,7 @@
         function abrirModalPagamento() {
             let temItemMarcado = false;
             let resumoHTML = "<ul>";
-            let valorTotalPix = 0;
-            let valorTotalCartao = 0;
+            let valorTotal = 0;
 
             const cards = document.querySelectorAll('.card');
 
@@ -237,13 +219,11 @@
                     temItemMarcado = true;
                     resumoHTML += `<li class="resumo-titulo">${nomeProduto}</li>`;
                     
-                    const precoPixProduto = parseFloat(card.getAttribute('data-preco-pix'));
-                    const precoCartaoProduto = parseFloat(card.getAttribute('data-preco-cartao'));
+                    const precoBaseProduto = parseFloat(card.getAttribute('data-preco-pix'));
                     
                     checkboxes.forEach(box => {
                         resumoHTML += `<li>- 1x ${box.value}</li>`;
-                        valorTotalPix += precoPixProduto;
-                        valorTotalCartao += precoCartaoProduto;
+                        valorTotal += precoBaseProduto;
                     });
                 }
             });
@@ -254,20 +234,16 @@
             }
 
             resumoHTML += "</ul>";
-            
-            let pixFormatado = valorTotalPix.toFixed(2).replace('.', ',');
-            let cartaoFormatado = valorTotalCartao.toFixed(2).replace('.', ',');
+            let totalFormatado = valorTotal.toFixed(2).replace('.', ',');
             
             resumoHTML += `
             <div class="resumo-totais">
-                <span class="t-pix">Total no Pix: R$ ${pixFormatado}</span>
-                <span class="t-cartao">Total no Cartão: R$ ${cartaoFormatado}</span>
+                <span class="t-pix">Total: R$ ${totalFormatado}</span>
             </div>`;
 
             document.getElementById('resumoVisualHtml').innerHTML = resumoHTML;
             
-            document.getElementById('passo-pagamento').style.display = 'block';
-            document.getElementById('passo-entrega').style.display = 'none';
+            document.getElementById('passo-resumo').style.display = 'block';
             document.getElementById('passo-endereco').style.display = 'none';
             
             document.getElementById('end-rua').value = '';
@@ -282,29 +258,20 @@
             document.getElementById('modalPagamento').style.display = 'none';
         }
 
-        function irParaEntrega(forma) {
-            formaPagamentoSelecionada = forma; 
-            document.getElementById('passo-pagamento').style.display = 'none';
-            document.getElementById('passo-entrega').style.display = 'block';
-        }
-
-        function voltarPagamento() {
-            document.getElementById('passo-entrega').style.display = 'none';
-            document.getElementById('passo-pagamento').style.display = 'block';
-        }
-
         function mostrarEndereco() {
-            document.getElementById('passo-entrega').style.display = 'none';
+            document.getElementById('passo-resumo').style.display = 'none';
             document.getElementById('passo-endereco').style.display = 'block';
         }
 
-        function voltarEntrega() {
+        function voltarResumo() {
             document.getElementById('passo-endereco').style.display = 'none';
-            document.getElementById('passo-entrega').style.display = 'block';
+            document.getElementById('passo-resumo').style.display = 'block';
         }
 
-        function finalizarPedido(tipoRecebimento) {
+        async function finalizarPedido(tipoRecebimento) {
             let enderecoFinalTexto = "";
+            let btnClicado = event.target;
+            let textoOriginalBtn = btnClicado.innerText;
 
             if (tipoRecebimento === 'Entrega') {
                 const rua = document.getElementById('end-rua').value.trim();
@@ -316,17 +283,18 @@
                     alert("Por favor, preencha todos os campos do endereço, incluindo o ponto de referência.");
                     return;
                 }
-                
                 enderecoFinalTexto = `*Endereço de Entrega:*%0A${rua}, ${numero} - ${bairro}%0A*Referência:* ${referencia}%0A`;
             } else {
                 enderecoFinalTexto = `*Recebimento:* Retirada no Local%0A`;
             }
 
+            btnClicado.innerText = "Gerando pagamento...";
+            btnClicado.disabled = true;
+
             const numeroWhatsApp = "5544999992222"; 
             let pedidoTexto = "Olá! Gostaria de fazer o seguinte pedido:%0A%0A";
             let quantidadeTotalItens = 0; 
-            let valorTotalPix = 0;
-            let valorTotalCartao = 0;
+            let valorTotal = 0;
 
             const cards = document.querySelectorAll('.card');
 
@@ -336,35 +304,60 @@
                 
                 if(checkboxes.length > 0) {
                     pedidoTexto += `*${nomeProduto}*%0A`;
-                    const precoPixProduto = parseFloat(card.getAttribute('data-preco-pix'));
-                    const precoCartaoProduto = parseFloat(card.getAttribute('data-preco-cartao'));
+                    const precoBaseProduto = parseFloat(card.getAttribute('data-preco-pix'));
                     
                     checkboxes.forEach(box => {
                         pedidoTexto += `- 1x ${box.value}%0A`;
                         quantidadeTotalItens++; 
-                        valorTotalPix += precoPixProduto;
-                        valorTotalCartao += precoCartaoProduto;
+                        valorTotal += precoBaseProduto;
                     });
                     pedidoTexto += "%0A"; 
                 }
             });
 
-            let valorFinalCalculado = 0;
-            if(formaPagamentoSelecionada === 'Pix/Dinheiro') {
-                valorFinalCalculado = valorTotalPix;
-            } else if (formaPagamentoSelecionada === 'Cartão') {
-                valorFinalCalculado = valorTotalCartao;
-            }
-
-            const totalFormatado = valorFinalCalculado.toFixed(2).replace('.', ',');
+            const totalFormatado = valorTotal.toFixed(2).replace('.', ',');
 
             pedidoTexto += `*Resumo do Pedido:*%0A`;
             pedidoTexto += `Quantidade: ${quantidadeTotalItens} unidade(s)%0A`;
-            pedidoTexto += `Pagamento: ${formaPagamentoSelecionada}%0A`;
             pedidoTexto += enderecoFinalTexto;
-            pedidoTexto += `*Total a Pagar: R$ ${totalFormatado}*%0A`;
+            pedidoTexto += `*Total: R$ ${totalFormatado}*%0A`;
+
+            // Chama a API da InfinitePay
+            const payloadInfinitePay = {
+                "handle": "marquesricardo",
+                "items": [
+                    {
+                        "quantity": 1,
+                        "price": Math.round(valorTotal * 100), 
+                        "description": `Pedido Vapes - ${quantidadeTotalItens} itens`
+                    }
+                ]
+            };
+
+            try {
+                const resposta = await fetch("https://api.checkout.infinitepay.io/links", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payloadInfinitePay)
+                });
+
+                const dados = await resposta.json();
+                const linkGerado = dados.url || dados.link;
+
+                if (linkGerado) {
+                    pedidoTexto += `%0A💳 *Pague com Pix ou Cartão de Crédito aqui:* %0A${linkGerado}`;
+                } else {
+                    pedidoTexto += `%0A⚠️ *Aguardando envio do link de pagamento.*`;
+                }
+            } catch (erro) {
+                console.error("Erro ao gerar link:", erro);
+                pedidoTexto += `%0A⚠️ *Aguardando envio do link de pagamento.*`;
+            }
 
             fecharModal();
+            btnClicado.innerText = textoOriginalBtn;
+            btnClicado.disabled = false;
+            
             window.location.href = `https://wa.me/${numeroWhatsApp}?text=${pedidoTexto}`;
         }
     </script>
