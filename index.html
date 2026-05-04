@@ -321,22 +321,15 @@
             pedidoTexto += enderecoFinalTexto;
             pedidoTexto += `*Total: R$ ${totalFormatado}*%0A`;
 
-            // Novo Payload enviando para o seu Google Script
-            const payloadParaGoogle = {
-                valorEmCentavos: Math.round(valorTotal * 100),
-                descricao: `Pedido Vapes - ${quantidadeTotalItens} itens`
-            };
-
             try {
-                // Sua URL oficial da ponte
-                const URL_DO_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbzQ7f5NUZvRZv_T8aCxSllRxM-JAErkcFg6hUJ7-Tt0y9F2lHVnofO5qlVLov9KcNWXew/exec";
+                // Converte os valores e textos para passarem na URL sem erro
+                const valorCentavos = Math.round(valorTotal * 100);
+                const desc = encodeURIComponent(`Pedido Vapes - ${quantidadeTotalItens} itens`);
+                
+                // Manda a requisição via GET para o Google Apps Script
+                const URL_DO_GOOGLE_SCRIPT = `https://script.google.com/macros/s/AKfycbzQ7f5NUZvRZv_T8aCxSllRxM-JAErkcFg6hUJ7-Tt0y9F2lHVnofO5qlVLov9KcNWXew/exec?valor=${valorCentavos}&descricao=${desc}`;
 
-                const resposta = await fetch(URL_DO_GOOGLE_SCRIPT, {
-                    method: "POST",
-                    headers: { "Content-Type": "text/plain" }, 
-                    body: JSON.stringify(payloadParaGoogle)
-                });
-
+                const resposta = await fetch(URL_DO_GOOGLE_SCRIPT);
                 const dados = await resposta.json();
                 const linkGerado = dados.url || dados.link;
 
