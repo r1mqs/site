@@ -30,8 +30,6 @@
         .destaque-sabor { color: #4caf50; font-weight: 600; font-size: 0.75rem; }
         .descricao-sabor { font-size: 0.65rem; color: #888; margin-top: 2px; line-height: 1.1; }
         
-        .carregando { color: #888; font-size: 0.8rem; text-align: center; padding: 10px 0; font-style: italic; }
-
         .btn-flutuante { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: #25D366; color: white; text-align: center; padding: 14px; border-radius: 30px; font-size: 1.05rem; font-weight: bold; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.25); border: none; cursor: pointer; z-index: 100; }
 
         .modal-fundo { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 200; justify-content: center; align-items: center; }
@@ -51,7 +49,19 @@
         .btn-pagamento { display: block; width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: none; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
         .btn-pix { background: #32bcad; color: white; } 
         .btn-cartao { background: #444; color: white; border: 1px solid #666; }
-        .btn-fechar-modal { background: none; border: none; color: #888; text-decoration: underline; margin-top: 5px; cursor: pointer; padding: 10px; }
+        .btn-fechar-modal { background: none; border: none; color: #888; text-decoration: underline; margin-top: 5px; cursor: pointer; padding: 10px; width: 100%; }
+        
+        .input-endereco { width: 100%; box-sizing: border-box; padding: 10px; background: #141414; border: 1px solid #333; color: #fff; border-radius: 6px; margin-top: 4px; font-family: inherit; font-size: 0.9rem; }
+        .input-endereco:focus { outline: none; border-color: #4caf50; }
+        .label-endereco { color: #bbb; font-size: 0.8rem; margin-top: 10px; display: block; text-align: left; }
+        .obrigatorio { color: #ff4444; font-size: 0.8rem; margin-left: 3px; }
+
+        /* Estilos do Loading Novo */
+        .tela-carregamento { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; }
+        .spinner { width: 45px; height: 45px; border: 4px solid #2a2a2a; border-top: 4px solid #4caf50; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .porcentagem { font-size: 1.8rem; font-weight: bold; color: #fff; margin-bottom: 5px; }
+        .texto-loading { font-size: 0.9rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -63,19 +73,76 @@
     <div class="modal-fundo" id="modalPagamento">
         <div class="modal-conteudo">
             <h2>Confira seu Pedido</h2>
-            <div class="caixa-resumo" id="resumoVisualHtml"></div>
-            <h3 style="font-size: 1rem; color: #fff; margin-top: 0; margin-bottom: 15px;">Como deseja pagar?</h3>
-            <button class="btn-pagamento btn-pix" onclick="processarPedido('Pix/Dinheiro')">Pix ou Dinheiro</button>
-            <button class="btn-pagamento btn-cartao" onclick="processarPedido('Cartão')">Cartão de Crédito/Débito</button>
-            <button class="btn-fechar-modal" onclick="fecharModal()">Voltar e Editar</button>
+            
+            <div id="passo-pagamento">
+                <div class="caixa-resumo" id="resumoVisualHtml"></div>
+                <h3 style="font-size: 1rem; color: #fff; margin-top: 0; margin-bottom: 15px;">Como deseja pagar?</h3>
+                <button class="btn-pagamento btn-pix" onclick="irParaEntrega('Pix/Dinheiro')">Pix ou Dinheiro</button>
+                <button class="btn-pagamento btn-cartao" onclick="irParaEntrega('Cartão')">Cartão de Crédito/Débito</button>
+                <button class="btn-fechar-modal" onclick="fecharModal()">Voltar e Editar</button>
+            </div>
+
+            <div id="passo-entrega" style="display: none;">
+                <h3 style="font-size: 1rem; color: #fff; margin-top: 0; margin-bottom: 15px;">Forma de Recebimento</h3>
+                <button class="btn-pagamento btn-pix" onclick="finalizarPedido('Retirada')">Retirar no Local</button>
+                <button class="btn-pagamento btn-cartao" onclick="mostrarEndereco()">Entrega (Delivery)</button>
+                <button class="btn-fechar-modal" onclick="voltarPagamento()">Voltar</button>
+            </div>
+
+            <div id="passo-endereco" style="display: none;">
+                <h3 style="font-size: 1rem; color: #fff; margin-top: 0; margin-bottom: 5px;">Endereço de Entrega</h3>
+                
+                <label class="label-endereco">Rua / Avenida<span class="obrigatorio">*</span></label>
+                <input type="text" id="end-rua" class="input-endereco" placeholder="Ex: Av. Paraná">
+                
+                <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1;">
+                        <label class="label-endereco">Número<span class="obrigatorio">*</span></label>
+                        <input type="text" id="end-numero" class="input-endereco" placeholder="Ex: 123">
+                    </div>
+                    <div style="flex: 2;">
+                        <label class="label-endereco">Bairro<span class="obrigatorio">*</span></label>
+                        <input type="text" id="end-bairro" class="input-endereco" placeholder="Ex: Centro">
+                    </div>
+                </div>
+
+                <label class="label-endereco">Ponto de Referência<span class="obrigatorio">*</span></label>
+                <input type="text" id="end-ref" class="input-endereco" placeholder="Ex: Ao lado do mercado...">
+
+                <button class="btn-pagamento btn-pix" style="margin-top: 20px;" onclick="finalizarPedido('Entrega')">Confirmar Pedido</button>
+                <button class="btn-fechar-modal" onclick="voltarEntrega()">Voltar</button>
+            </div>
+
         </div>
     </div>
 
     <script>
         const API_ESTOQUE = "https://script.google.com/macros/s/AKfycbxpnrZKWVhy-inOHMA9qetReDBfUTeLt5JEEp6yUs3ca4rcXCgsmzyGbXYadHczL7HAZQ/exec"; 
+        
+        let formaPagamentoSelecionada = "";
+        let intervaloProgresso;
 
         window.onload = function() {
-            document.getElementById('vitrineProdutos').innerHTML = '<h3 style="color:#fff; text-align:center; grid-column: 1 / -1;">Carregando catálogo e estoque...</h3>';
+            // HTML da tela de loading atualizado
+            document.getElementById('vitrineProdutos').innerHTML = `
+                <div class="tela-carregamento">
+                    <div class="spinner"></div>
+                    <div class="porcentagem" id="loading-percent">0%</div>
+                    <div class="texto-loading">Sincronizando Estoque</div>
+                </div>
+            `;
+            
+            // Lógica do contador animado
+            let progresso = 0;
+            intervaloProgresso = setInterval(() => {
+                if (progresso < 92) {
+                    progresso += Math.floor(Math.random() * 12) + 3; // Pulos aleatórios para parecer real
+                    if (progresso > 92) progresso = 92;
+                    const el = document.getElementById('loading-percent');
+                    if(el) el.innerText = progresso + '%';
+                }
+            }, 100);
+
             carregarEstoque();
         };
 
@@ -84,23 +151,33 @@
                 const resposta = await fetch(API_ESTOQUE);
                 const dados = await resposta.json();
                 
-                const produtosAgrupados = {};
-                
-                dados.forEach(item => {
-                    if (!produtosAgrupados[item.produto]) {
-                        produtosAgrupados[item.produto] = {
-                            sabores: [],
-                            pix: item.precoPix || 0,
-                            cartao: item.precoCartao || 0,
-                            img: item.imagem || "https://via.placeholder.com/300x300?text=Sem+Imagem" 
-                        };
-                    }
-                    produtosAgrupados[item.produto].sabores.push(item);
-                });
+                // Força o 100% quando os dados chegam do Google
+                clearInterval(intervaloProgresso);
+                const el = document.getElementById('loading-percent');
+                if(el) el.innerText = '100%';
 
-                renderizarCatalogo(produtosAgrupados);
+                // Aguarda 300ms para o cliente ver o 100% antes de mostrar os produtos
+                setTimeout(() => {
+                    const produtosAgrupados = {};
+                    
+                    dados.forEach(item => {
+                        if (!produtosAgrupados[item.produto]) {
+                            produtosAgrupados[item.produto] = {
+                                sabores: [],
+                                pix: item.precoPix || 0,
+                                cartao: item.precoCartao || 0,
+                                img: item.imagem || "https://via.placeholder.com/300x300?text=Sem+Imagem" 
+                            };
+                        }
+                        produtosAgrupados[item.produto].sabores.push(item);
+                    });
+
+                    renderizarCatalogo(produtosAgrupados);
+                }, 300);
+
             } catch (erro) {
                 console.error("Erro:", erro);
+                clearInterval(intervaloProgresso);
                 document.getElementById('vitrineProdutos').innerHTML = '<h3 style="color:#ff4444; text-align:center; grid-column: 1 / -1;">Erro ao carregar o estoque. Tente novamente.</h3>';
             }
         }
@@ -110,7 +187,6 @@
             vitrine.innerHTML = ''; 
 
             for (const [nomeProduto, dadosProduto] of Object.entries(produtosAgrupados)) {
-                
                 let htmlSabores = '';
                 dadosProduto.sabores.forEach(s => {
                     htmlSabores += `
@@ -189,6 +265,16 @@
             </div>`;
 
             document.getElementById('resumoVisualHtml').innerHTML = resumoHTML;
+            
+            document.getElementById('passo-pagamento').style.display = 'block';
+            document.getElementById('passo-entrega').style.display = 'none';
+            document.getElementById('passo-endereco').style.display = 'none';
+            
+            document.getElementById('end-rua').value = '';
+            document.getElementById('end-numero').value = '';
+            document.getElementById('end-bairro').value = '';
+            document.getElementById('end-ref').value = ''; 
+
             document.getElementById('modalPagamento').style.display = 'flex';
         }
 
@@ -196,10 +282,47 @@
             document.getElementById('modalPagamento').style.display = 'none';
         }
 
-        function processarPedido(formaDePagamentoSelecionada) {
-            // Substitua pelo seu número de WhatsApp com DDD
+        function irParaEntrega(forma) {
+            formaPagamentoSelecionada = forma; 
+            document.getElementById('passo-pagamento').style.display = 'none';
+            document.getElementById('passo-entrega').style.display = 'block';
+        }
+
+        function voltarPagamento() {
+            document.getElementById('passo-entrega').style.display = 'none';
+            document.getElementById('passo-pagamento').style.display = 'block';
+        }
+
+        function mostrarEndereco() {
+            document.getElementById('passo-entrega').style.display = 'none';
+            document.getElementById('passo-endereco').style.display = 'block';
+        }
+
+        function voltarEntrega() {
+            document.getElementById('passo-endereco').style.display = 'none';
+            document.getElementById('passo-entrega').style.display = 'block';
+        }
+
+        function finalizarPedido(tipoRecebimento) {
+            let enderecoFinalTexto = "";
+
+            if (tipoRecebimento === 'Entrega') {
+                const rua = document.getElementById('end-rua').value.trim();
+                const numero = document.getElementById('end-numero').value.trim();
+                const bairro = document.getElementById('end-bairro').value.trim();
+                const referencia = document.getElementById('end-ref').value.trim();
+
+                if (!rua || !numero || !bairro || !referencia) {
+                    alert("Por favor, preencha todos os campos do endereço, incluindo o ponto de referência.");
+                    return;
+                }
+                
+                enderecoFinalTexto = `*Endereço de Entrega:*%0A${rua}, ${numero} - ${bairro}%0A*Referência:* ${referencia}%0A`;
+            } else {
+                enderecoFinalTexto = `*Recebimento:* Retirada no Local%0A`;
+            }
+
             const numeroWhatsApp = "5544999992222"; 
-            
             let pedidoTexto = "Olá! Gostaria de fazer o seguinte pedido:%0A%0A";
             let quantidadeTotalItens = 0; 
             let valorTotalPix = 0;
@@ -227,9 +350,9 @@
             });
 
             let valorFinalCalculado = 0;
-            if(formaDePagamentoSelecionada === 'Pix/Dinheiro') {
+            if(formaPagamentoSelecionada === 'Pix/Dinheiro') {
                 valorFinalCalculado = valorTotalPix;
-            } else if (formaDePagamentoSelecionada === 'Cartão') {
+            } else if (formaPagamentoSelecionada === 'Cartão') {
                 valorFinalCalculado = valorTotalCartao;
             }
 
@@ -237,12 +360,11 @@
 
             pedidoTexto += `*Resumo do Pedido:*%0A`;
             pedidoTexto += `Quantidade: ${quantidadeTotalItens} unidade(s)%0A`;
-            pedidoTexto += `Forma de Pagamento: ${formaDePagamentoSelecionada}%0A`;
+            pedidoTexto += `Pagamento: ${formaPagamentoSelecionada}%0A`;
+            pedidoTexto += enderecoFinalTexto;
             pedidoTexto += `*Total a Pagar: R$ ${totalFormatado}*%0A`;
 
             fecharModal();
-            
-            // Aqui está a alteração para abrir na mesma aba do navegador no celular
             window.location.href = `https://wa.me/${numeroWhatsApp}?text=${pedidoTexto}`;
         }
     </script>
