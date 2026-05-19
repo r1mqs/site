@@ -1,4 +1,4 @@
-```html id="r3v8zk"
+```html id="a8h2zq"
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -390,11 +390,60 @@ async function carregarProdutos(){
         const url =
         API_ESTOQUE + "?t=" + Date.now();
 
-        const resp =
-        await fetch(url);
+        console.log("Buscando API:", url);
 
-        const dados =
-        await resp.json();
+        const resp =
+        await fetch(url, {
+            method: "GET",
+            mode: "cors"
+        });
+
+        const texto =
+        await resp.text();
+
+        console.log("Resposta RAW:", texto);
+
+        let dados;
+
+        try {
+
+            dados = JSON.parse(texto);
+
+        } catch(errJson){
+
+            document.getElementById("loading")
+            .innerHTML =
+            `
+            <span style="color:red">
+
+                ❌ A API não retornou JSON válido.
+
+                <br><br>
+
+                <small style="word-break:break-word">
+                    ${texto}
+                </small>
+
+            </span>
+            `;
+
+            return;
+        }
+
+        if (dados.erro) {
+
+            document.getElementById("loading")
+            .innerHTML =
+            `
+            <span style="color:red">
+
+                ❌ ${dados.erro}
+
+            </span>
+            `;
+
+            return;
+        }
 
         const produtos =
         dados.produtos || [];
@@ -416,9 +465,14 @@ async function carregarProdutos(){
         document.getElementById("loading")
         .innerHTML =
         `
-        <span style="color:var(--red)">
-            ❌ Erro geral:<br><br>
+        <span style="color:red">
+
+            ❌ Erro geral:
+
+            <br><br>
+
             ${e.message}
+
         </span>
         `;
     }
