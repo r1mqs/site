@@ -1,3 +1,4 @@
+```html id="r3v8zk"
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -223,25 +224,6 @@ h1{
     word-break:break-all;
 }
 
-#area-cartao{
-    display:none;
-    margin-top:12px;
-    background:rgba(255,255,255,.05);
-    border-radius:12px;
-    padding:14px;
-    font-size:.85rem;
-    color:rgba(255,255,255,.7);
-    text-align:center;
-}
-
-#link-pagamento{
-    display:block;
-    margin-top:10px;
-    color:var(--green);
-    font-weight:700;
-    word-break:break-all;
-}
-
 </style>
 
 </head>
@@ -332,7 +314,7 @@ h1{
                     Chave Pix:
                 </div>
 
-                <div class="pix-chave" id="pix-chave">
+                <div class="pix-chave">
                     44999992222
                 </div>
 
@@ -344,22 +326,6 @@ h1{
                 </button>
 
             </div>
-
-        </div>
-
-        <!-- CARTÃO -->
-        <div id="area-cartao">
-
-            Clique em confirmar pedido para gerar o link.
-
-            <a
-                id="link-pagamento"
-                href="#"
-                target="_blank"
-                style="display:none"
-            >
-                Abrir link de pagamento
-            </a>
 
         </div>
 
@@ -421,33 +387,38 @@ async function carregarProdutos(){
 
     try {
 
-        const url = API_ESTOQUE + "?t=" + Date.now();
+        const url =
+        API_ESTOQUE + "?t=" + Date.now();
 
-        const resp = await fetch(url, {
-            method: "GET",
-            mode: "cors"
-        });
+        const resp =
+        await fetch(url);
 
-        const dados = await resp.json();
+        const dados =
+        await resp.json();
 
-        const produtos = dados.produtos || [];
+        const produtos =
+        dados.produtos || [];
 
-        bairros = dados.bairros || [];
+        bairros =
+        dados.bairros || [];
 
         preencherBairros();
 
         renderizarProdutos(produtos);
 
-        document.getElementById("loading").style.display = "none";
+        document.getElementById("loading")
+        .style.display = "none";
 
     } catch(e) {
 
         console.error(e);
 
-        document.getElementById("loading").innerHTML =
+        document.getElementById("loading")
+        .innerHTML =
         `
         <span style="color:var(--red)">
-            ❌ ${e.message}
+            ❌ Erro geral:<br><br>
+            ${e.message}
         </span>
         `;
     }
@@ -460,7 +431,8 @@ BAIRROS
 
 function preencherBairros(){
 
-    const sel = document.getElementById("sel-bairro");
+    const sel =
+    document.getElementById("sel-bairro");
 
     sel.innerHTML =
     `<option value="">Escolha o bairro</option>`;
@@ -511,7 +483,8 @@ function renderizarProdutos(produtos){
             p.imagem.trim();
         }
 
-        agrupados[p.produto].sabores.push(p);
+        agrupados[p.produto]
+        .sabores.push(p);
     });
 
     for (const [nome, d] of Object.entries(agrupados)){
@@ -651,8 +624,8 @@ function abrirModal(){
     </div>
     `;
 
-    document.getElementById("resumo").innerHTML =
-    resumoHTML;
+    document.getElementById("resumo")
+    .innerHTML = resumoHTML;
 
     document.getElementById("modal")
     .classList.add("show");
@@ -675,7 +648,8 @@ function onChangeEntrega(){
     const tipo =
     document.getElementById("tipo-entrega").value;
 
-    document.getElementById("area-bairro").style.display =
+    document.getElementById("area-bairro")
+    .style.display =
     tipo === "delivery"
     ? "block"
     : "none";
@@ -693,13 +667,9 @@ function onChangePagamento(){
     const pag =
     document.getElementById("pagamento").value;
 
-    document.getElementById("area-pix").style.display =
+    document.getElementById("area-pix")
+    .style.display =
     pag === "pix"
-    ? "block"
-    : "none";
-
-    document.getElementById("area-cartao").style.display =
-    pag === "cartao"
     ? "block"
     : "none";
 }
@@ -726,11 +696,13 @@ function atualizarTotal(){
             const bairro =
             bairros[parseInt(bairroIndex)];
 
-            total += Number(bairro.taxaEntrega);
+            total +=
+            Number(bairro.taxaEntrega);
         }
     }
 
-    document.querySelector(".resumo-total").innerHTML =
+    document.querySelector(".resumo-total")
+    .innerHTML =
     `
     <span>Total</span>
     <span>R$ ${fmt(total)}</span>
@@ -744,7 +716,8 @@ PIX
 
 function copiarPix(){
 
-    navigator.clipboard.writeText(PIX_CHAVE);
+    navigator.clipboard
+    .writeText(PIX_CHAVE);
 
     alert("Chave Pix copiada!");
 }
@@ -754,7 +727,7 @@ function copiarPix(){
 FINALIZAR
 ===================================================== */
 
-async function finalizarPedido(){
+function finalizarPedido(){
 
     const tipoEntrega =
     document.getElementById("tipo-entrega").value;
@@ -821,91 +794,6 @@ async function finalizarPedido(){
     const total =
     subtotal + taxa;
 
-
-    /* PIX */
-
-    if (pagamento === "pix") {
-
-        enviarWhatsApp(
-            tipoEntrega,
-            bairro,
-            rua,
-            numero,
-            referencia,
-            total,
-            taxa
-        );
-
-        return;
-    }
-
-
-    /* CARTÃO */
-
-    try {
-
-        const valorCentavos =
-        Math.round(total * 100);
-
-        const desc =
-        itensSelecionados
-        .map(i => `${i.produto} ${i.sabor}`)
-        .join(", ");
-
-        const url =
-        `${API_ESTOQUE}?valor=${valorCentavos}&descricao=${encodeURIComponent(desc)}`;
-
-        const resp =
-        await fetch(url);
-
-        const data =
-        await resp.json();
-
-        if (
-            data.payment_url ||
-            data.url ||
-            data.link
-        ) {
-
-            const linkPag =
-            data.payment_url ||
-            data.url ||
-            data.link;
-
-            window.open(linkPag, "_blank");
-
-        } else {
-
-            alert(
-                "Erro ao gerar link:\n\n" +
-                JSON.stringify(data)
-            );
-        }
-
-    } catch(e) {
-
-        alert(
-            "Erro:\n\n" +
-            e.message
-        );
-    }
-}
-
-
-/* =====================================================
-WHATSAPP
-===================================================== */
-
-function enviarWhatsApp(
-    tipoEntrega,
-    bairro,
-    rua,
-    numero,
-    referencia,
-    total,
-    taxa
-){
-
     let msg =
     "Olá! Gostaria de fazer um pedido:%0A%0A";
 
@@ -915,29 +803,49 @@ function enviarWhatsApp(
         `• ${i.produto} — ${i.sabor} (R$ ${fmt(i.preco)})%0A`;
     });
 
-    msg += `%0ATipo de entrega: ${tipoEntrega}%0A`;
+    msg +=
+    `%0ATipo de entrega: ${tipoEntrega}%0A`;
 
     if (tipoEntrega === "delivery") {
 
-        msg += `Bairro: ${bairro.bairro}%0A`;
+        msg +=
+        `Bairro: ${bairro.bairro}%0A`;
 
-        msg += `Taxa entrega: R$ ${fmt(taxa)}%0A`;
+        msg +=
+        `Taxa entrega: R$ ${fmt(taxa)}%0A`;
 
-        msg += `Rua: ${rua}%0A`;
+        msg +=
+        `Rua: ${rua}%0A`;
 
-        msg += `Número: ${numero}%0A`;
+        msg +=
+        `Número: ${numero}%0A`;
 
         if (referencia) {
 
-            msg += `Referência: ${referencia}%0A`;
+            msg +=
+            `Referência: ${referencia}%0A`;
         }
     }
 
-    msg += `%0APagamento: PIX%0A`;
+    if (pagamento === "pix") {
 
-    msg += `Chave Pix: ${PIX_CHAVE}%0A`;
+        msg +=
+        `%0APagamento: PIX%0A`;
 
-    msg += `%0A*Total: R$ ${fmt(total)}*`;
+        msg +=
+        `Chave Pix: ${PIX_CHAVE}%0A`;
+
+    } else {
+
+        msg +=
+        `%0APagamento: Cartão%0A`;
+
+        msg +=
+        `Cliente deseja pagar via InfinitePay.%0A`;
+    }
+
+    msg +=
+    `%0A*Total: R$ ${fmt(total)}*`;
 
     window.open(
         `https://wa.me/${WHATSAPP}?text=${msg}`,
@@ -970,3 +878,4 @@ document.getElementById("modal")
 
 </body>
 </html>
+```
