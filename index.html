@@ -5,7 +5,8 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Catálogo Vapes</title>
+
+<title>Vapes Premium</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -122,8 +123,6 @@ h1{
     box-shadow:0 4px 20px rgba(48,209,88,.4);
 }
 
-/* MODAL */
-
 .modal{
     position:fixed;
     inset:0;
@@ -210,9 +209,18 @@ h1{
     color:#fff;
 }
 
-.btn-green.loading-btn{
-    opacity:.7;
-    cursor:not-allowed;
+.pix-box{
+    margin-top:12px;
+    background:rgba(255,255,255,.05);
+    border-radius:12px;
+    padding:14px;
+}
+
+.pix-chave{
+    margin-top:10px;
+    font-weight:700;
+    color:var(--green);
+    word-break:break-all;
 }
 
 #area-cartao{
@@ -235,6 +243,7 @@ h1{
 }
 
 </style>
+
 </head>
 
 <body>
@@ -261,26 +270,84 @@ h1{
 
         <div id="resumo"></div>
 
-        <select class="campo" id="sel-bairro">
-            <option value="">Escolha o bairro</option>
+        <!-- ENTREGA -->
+        <select class="campo" id="tipo-entrega" onchange="onChangeEntrega()">
+
+            <option value="">
+                Tipo de entrega
+            </option>
+
+            <option value="retirada">
+                Retirada
+            </option>
+
+            <option value="delivery">
+                Delivery
+            </option>
+
         </select>
 
-        <input class="campo" id="rua" placeholder="Rua">
+        <!-- DELIVERY -->
+        <div id="area-bairro" style="display:none">
 
-        <input class="campo" id="numero" placeholder="Número">
+            <select class="campo" id="sel-bairro" onchange="atualizarTotal()">
 
-        <input class="campo" id="referencia" placeholder="Referência">
+                <option value="">
+                    Escolha o bairro
+                </option>
 
+            </select>
+
+            <input class="campo" id="rua" placeholder="Rua">
+
+            <input class="campo" id="numero" placeholder="Número">
+
+            <input class="campo" id="referencia" placeholder="Referência">
+
+        </div>
+
+        <!-- PAGAMENTO -->
         <select class="campo" id="pagamento" onchange="onChangePagamento()">
 
-            <option value="">Forma de pagamento</option>
+            <option value="">
+                Forma de pagamento
+            </option>
 
-            <option value="pix">Pix</option>
+            <option value="pix">
+                Pix
+            </option>
 
-            <option value="cartao">Cartão</option>
+            <option value="cartao">
+                Cartão
+            </option>
 
         </select>
 
+        <!-- PIX -->
+        <div id="area-pix" style="display:none">
+
+            <div class="pix-box">
+
+                <div>
+                    Chave Pix:
+                </div>
+
+                <div class="pix-chave" id="pix-chave">
+                    44999992222
+                </div>
+
+                <button
+                    class="btn btn-green"
+                    onclick="copiarPix()"
+                >
+                    Copiar Chave Pix
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- CARTÃO -->
         <div id="area-cartao">
 
             Clique em confirmar pedido para gerar o link.
@@ -298,7 +365,6 @@ h1{
 
         <button
             class="btn btn-green"
-            id="btn-confirmar"
             onclick="finalizarPedido()"
         >
             Confirmar Pedido
@@ -325,6 +391,8 @@ const API_ESTOQUE =
 "https://script.google.com/macros/s/AKfycbxSRrZtLRP1YCzf7XbWHvwR5N72f4AITYqF0dlXoFPkZyLTkuq17qtV_uErmy9eg9Nk0w/exec";
 
 const WHATSAPP = "5544999992222";
+
+const PIX_CHAVE = "44999992222";
 
 
 /* =====================================================
@@ -355,48 +423,12 @@ async function carregarProdutos(){
 
         const url = API_ESTOQUE + "?t=" + Date.now();
 
-        console.log("Buscando API:", url);
+        const resp = await fetch(url, {
+            method: "GET",
+            mode: "cors"
+        });
 
-        const resp = await fetch(url);
-
-        const texto = await resp.text();
-
-        console.log("Resposta RAW:", texto);
-
-        let dados;
-
-        try {
-
-            dados = JSON.parse(texto);
-
-        } catch(parseErro){
-
-            document.getElementById("loading").innerHTML =
-            `
-            <span style="color:var(--red)">
-                ❌ A API não retornou JSON válido.<br><br>
-
-                <small style="word-break:break-word">
-                    ${texto}
-                </small>
-            </span>
-            `;
-
-            return;
-        }
-
-        if (dados.erro) {
-
-            document.getElementById("loading").innerHTML =
-            `
-            <span style="color:var(--red)">
-                ❌ Erro no Apps Script:<br><br>
-                ${dados.erro}
-            </span>
-            `;
-
-            return;
-        }
+        const dados = await resp.json();
 
         const produtos = dados.produtos || [];
 
@@ -415,8 +447,7 @@ async function carregarProdutos(){
         document.getElementById("loading").innerHTML =
         `
         <span style="color:var(--red)">
-            ❌ Erro geral:<br><br>
-            ${e.message}
+            ❌ ${e.message}
         </span>
         `;
     }
@@ -452,7 +483,8 @@ PRODUTOS
 
 function renderizarProdutos(produtos){
 
-    const catalogo = document.getElementById("catalogo");
+    const catalogo =
+    document.getElementById("catalogo");
 
     catalogo.innerHTML = "";
 
@@ -463,10 +495,20 @@ function renderizarProdutos(produtos){
         if (!agrupados[p.produto]) {
 
             agrupados[p.produto] = {
-                imagem: p.imagem,
+                imagem: "",
                 preco: p.preco,
                 sabores: []
             };
+        }
+
+        if (
+            p.imagem &&
+            p.imagem.trim() &&
+            !agrupados[p.produto].imagem
+        ) {
+
+            agrupados[p.produto].imagem =
+            p.imagem.trim();
         }
 
         agrupados[p.produto].sabores.push(p);
@@ -478,7 +520,8 @@ function renderizarProdutos(produtos){
 
         d.sabores.forEach(s => {
 
-            const semEstoque = s.estoque <= 0;
+            const semEstoque =
+            s.estoque <= 0;
 
             saboresHTML +=
             `
@@ -510,8 +553,14 @@ function renderizarProdutos(produtos){
         <div class="card">
 
             <img
-                src="${d.imagem}"
-                onerror="this.src='https://via.placeholder.com/400x260/07091a/ffffff?text=Sem+Imagem'"
+                src="${d.imagem || 'https://via.placeholder.com/400x260/07091a/ffffff?text=Sem+Imagem'}"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+                crossorigin="anonymous"
+                onerror="
+                    this.onerror=null;
+                    this.src='https://via.placeholder.com/400x260/07091a/ffffff?text=Imagem+Indisponivel'
+                "
             >
 
             <div class="info">
@@ -560,7 +609,8 @@ function abrirModal(){
 
     checks.forEach(item => {
 
-        const preco = Number(item.dataset.preco);
+        const preco =
+        Number(item.dataset.preco);
 
         subtotal += preco;
 
@@ -573,13 +623,17 @@ function abrirModal(){
         resumoHTML +=
         `
         <div class="resumo-item">
+
             <span>
-                ${item.dataset.produto} — ${item.dataset.sabor}
+                ${item.dataset.produto}
+                —
+                ${item.dataset.sabor}
             </span>
 
             <span>
                 R$ ${fmt(preco)}
             </span>
+
         </div>
         `;
     });
@@ -587,16 +641,23 @@ function abrirModal(){
     resumoHTML +=
     `
     <div class="resumo-total">
-        <span>Subtotal</span>
-        <span>R$ ${fmt(subtotal)}</span>
+
+        <span>Total</span>
+
+        <span>
+            R$ ${fmt(subtotal)}
+        </span>
+
     </div>
     `;
 
-    document.getElementById("resumo").innerHTML = resumoHTML;
+    document.getElementById("resumo").innerHTML =
+    resumoHTML;
 
     document.getElementById("modal")
     .classList.add("show");
 }
+
 
 function fecharModal(){
 
@@ -604,47 +665,106 @@ function fecharModal(){
     .classList.remove("show");
 }
 
+
+/* =====================================================
+ENTREGA
+===================================================== */
+
+function onChangeEntrega(){
+
+    const tipo =
+    document.getElementById("tipo-entrega").value;
+
+    document.getElementById("area-bairro").style.display =
+    tipo === "delivery"
+    ? "block"
+    : "none";
+
+    atualizarTotal();
+}
+
+
+/* =====================================================
+PAGAMENTO
+===================================================== */
+
 function onChangePagamento(){
 
     const pag =
     document.getElementById("pagamento").value;
 
+    document.getElementById("area-pix").style.display =
+    pag === "pix"
+    ? "block"
+    : "none";
+
     document.getElementById("area-cartao").style.display =
-    pag === "cartao" ? "block" : "none";
+    pag === "cartao"
+    ? "block"
+    : "none";
 }
 
 
 /* =====================================================
-FINALIZAR PEDIDO
+TOTAL
+===================================================== */
+
+function atualizarTotal(){
+
+    let total = subtotal;
+
+    const tipo =
+    document.getElementById("tipo-entrega").value;
+
+    if (tipo === "delivery") {
+
+        const bairroIndex =
+        document.getElementById("sel-bairro").value;
+
+        if (bairroIndex !== "") {
+
+            const bairro =
+            bairros[parseInt(bairroIndex)];
+
+            total += Number(bairro.taxaEntrega);
+        }
+    }
+
+    document.querySelector(".resumo-total").innerHTML =
+    `
+    <span>Total</span>
+    <span>R$ ${fmt(total)}</span>
+    `;
+}
+
+
+/* =====================================================
+PIX
+===================================================== */
+
+function copiarPix(){
+
+    navigator.clipboard.writeText(PIX_CHAVE);
+
+    alert("Chave Pix copiada!");
+}
+
+
+/* =====================================================
+FINALIZAR
 ===================================================== */
 
 async function finalizarPedido(){
 
-    const bairroIndex =
-    document.getElementById("sel-bairro").value;
-
-    const rua =
-    document.getElementById("rua").value.trim();
-
-    const numero =
-    document.getElementById("numero").value.trim();
-
-    const referencia =
-    document.getElementById("referencia").value.trim();
+    const tipoEntrega =
+    document.getElementById("tipo-entrega").value;
 
     const pagamento =
     document.getElementById("pagamento").value;
 
-    if (bairroIndex === "") {
+    if (!tipoEntrega) {
 
-        alert("Escolha o bairro.");
-
-        return;
-    }
-
-    if (!rua || !numero) {
-
-        alert("Preencha rua e número.");
+        alert("Escolha o tipo de entrega.");
 
         return;
     }
@@ -656,26 +776,71 @@ async function finalizarPedido(){
         return;
     }
 
-    const bairro = bairros[parseInt(bairroIndex)];
+    let bairro = null;
+    let taxa = 0;
 
-    const taxa = Number(bairro.taxaEntrega);
+    let rua = "";
+    let numero = "";
+    let referencia = "";
 
-    const total = subtotal + taxa;
+    if (tipoEntrega === "delivery") {
+
+        const bairroIndex =
+        document.getElementById("sel-bairro").value;
+
+        rua =
+        document.getElementById("rua").value.trim();
+
+        numero =
+        document.getElementById("numero").value.trim();
+
+        referencia =
+        document.getElementById("referencia").value.trim();
+
+        if (bairroIndex === "") {
+
+            alert("Escolha o bairro.");
+
+            return;
+        }
+
+        if (!rua || !numero) {
+
+            alert("Preencha rua e número.");
+
+            return;
+        }
+
+        bairro =
+        bairros[parseInt(bairroIndex)];
+
+        taxa =
+        Number(bairro.taxaEntrega);
+    }
+
+    const total =
+    subtotal + taxa;
+
+
+    /* PIX */
 
     if (pagamento === "pix") {
 
         enviarWhatsApp(
+            tipoEntrega,
             bairro,
             rua,
             numero,
             referencia,
-            pagamento,
             total,
             taxa
         );
 
         return;
     }
+
+
+    /* CARTÃO */
 
     try {
 
@@ -690,21 +855,22 @@ async function finalizarPedido(){
         const url =
         `${API_ESTOQUE}?valor=${valorCentavos}&descricao=${encodeURIComponent(desc)}`;
 
-        const resp = await fetch(url);
+        const resp =
+        await fetch(url);
 
-        const data = await resp.json();
+        const data =
+        await resp.json();
 
-        if (data.payment_url || data.url || data.link) {
+        if (
+            data.payment_url ||
+            data.url ||
+            data.link
+        ) {
 
             const linkPag =
-            data.payment_url || data.url || data.link;
-
-            const linkEl =
-            document.getElementById("link-pagamento");
-
-            linkEl.href = linkPag;
-
-            linkEl.style.display = "block";
+            data.payment_url ||
+            data.url ||
+            data.link;
 
             window.open(linkPag, "_blank");
 
@@ -719,7 +885,7 @@ async function finalizarPedido(){
     } catch(e) {
 
         alert(
-            "Erro de conexão:\n\n" +
+            "Erro:\n\n" +
             e.message
         );
     }
@@ -731,11 +897,11 @@ WHATSAPP
 ===================================================== */
 
 function enviarWhatsApp(
+    tipoEntrega,
     bairro,
     rua,
     numero,
     referencia,
-    pagamento,
     total,
     taxa
 ){
@@ -749,20 +915,27 @@ function enviarWhatsApp(
         `• ${i.produto} — ${i.sabor} (R$ ${fmt(i.preco)})%0A`;
     });
 
-    msg += `%0ABairro: ${bairro.bairro}%0A`;
+    msg += `%0ATipo de entrega: ${tipoEntrega}%0A`;
 
-    msg += `Taxa: R$ ${fmt(taxa)}%0A`;
+    if (tipoEntrega === "delivery") {
 
-    msg += `Rua: ${rua}%0A`;
+        msg += `Bairro: ${bairro.bairro}%0A`;
 
-    msg += `Número: ${numero}%0A`;
+        msg += `Taxa entrega: R$ ${fmt(taxa)}%0A`;
 
-    if (referencia) {
+        msg += `Rua: ${rua}%0A`;
 
-        msg += `Referência: ${referencia}%0A`;
+        msg += `Número: ${numero}%0A`;
+
+        if (referencia) {
+
+            msg += `Referência: ${referencia}%0A`;
+        }
     }
 
-    msg += `Pagamento: ${pagamento}%0A`;
+    msg += `%0APagamento: PIX%0A`;
+
+    msg += `Chave Pix: ${PIX_CHAVE}%0A`;
 
     msg += `%0A*Total: R$ ${fmt(total)}*`;
 
@@ -774,7 +947,7 @@ function enviarWhatsApp(
 
 
 /* =====================================================
-HELPER
+HELPERS
 ===================================================== */
 
 function fmt(n){
